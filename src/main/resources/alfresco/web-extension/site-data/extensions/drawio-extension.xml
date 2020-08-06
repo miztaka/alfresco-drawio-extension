@@ -1,0 +1,68 @@
+<extension>
+    <modules>
+        <module>
+            <id>Global Extensions</id>
+            <version>1.0</version>
+            <auto-deploy>true</auto-deploy>
+            <auto-deploy-index>1</auto-deploy-index>
+            <customizations>
+                <customization>
+                    <targetPackageRoot>org.alfresco</targetPackageRoot>
+                    <sourcePackageRoot>net.catalyst</sourcePackageRoot>
+                </customization>
+            </customizations>
+
+            <configurations>
+                <config evaluator="string-compare" condition="DocLibActions">
+                    <actions>
+                        <!-- Edit online in Draw.io -->
+                        <action id="document-edit-drawio" type="link" label="actions.document.edit-drawio">
+                            <param name="href">drawio-edit?nodeRef={node.nodeRef}</param>
+                            <param name="target">_self</param>
+                            <permissions>
+                                <permission allow="true">Write</permission>
+                            </permissions>
+                            <!--<evaluator>evaluator.doclib.action.onlineEdit</evaluator>-->
+                            <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
+                            <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
+                            <evaluator>evaluator.catalyst.drawio.fileExtension</evaluator>
+                        </action>
+                    </actions>
+                    <actionGroups>
+                        <actionGroup id="document-browse">
+                            <action index="199" id="document-edit-drawio"/>
+                        </actionGroup>
+                        <actionGroup id="document-details">
+                            <action index="199" id="document-edit-drawio"/>
+                        </actionGroup>
+                    </actionGroups>
+                </config>
+            </configurations>
+        </module>
+
+        <module>
+            <id>Drawio-Online-Page</id>
+            <version>1.0</version>
+            <auto-deploy>true</auto-deploy>
+            <auto-deploy-index>7</auto-deploy-index>
+            <configurations>
+                <config evaluator="string-compare" condition="WebFramework" replace="false">
+                    <web-framework>
+                        <dojo-pages>
+                            <packages>
+                                <package name="drawiopage" location="drawio-share/drawiopage"/>
+                            </packages>
+                        </dojo-pages>
+                    </web-framework>
+                </config>
+            </configurations>
+            <customizations>
+                <customization>
+                    <targetPackageRoot>org.alfresco.share.header</targetPackageRoot>
+                    <sourcePackageRoot>net.catalyst.header</sourcePackageRoot>
+                </customization>
+            </customizations>
+        </module>
+
+    </modules>
+</extension>
