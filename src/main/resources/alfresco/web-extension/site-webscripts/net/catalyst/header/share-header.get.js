@@ -12,7 +12,7 @@ if (navMenu){
     logger.warn('--- Found Nav menu ---');
     navMenu.config.widgets = [{
         id: "HEADER_NAVIGATION_BACK_TO_DOC_PREVIEW",
-        name: "drawiopage/AlfMenuBarItem",
+        name: "js/drawiopage/AlfMenuBarItem",
         config: {
             id: "HEADER_NAVIGATION_BACK_TO_DOC_PREVIEW",
             label: msg.get("header.back.to.preview"),

@@ -45,25 +45,16 @@ if (typeof Catalyst == "undefined" || !Catalyst) {
 
             var me = this;
             var id = Alfresco.util.NodeRef(me.options.nodeRef).id;
-            alert(id);
-            alert(Alfresco.util.CSRFPolicy.getToken());
-            alert(Alfresco.util.CSRFPolicy.getParameter());
 
             require(["jquery"], (function ($) {
-                //var frame = '<iframe id="loleafletframe" name= "loleafletframe" allowfullscreen style="width:100%;height:100%;position:absolute;" src="https://embed.diagrams.net/" />';
+                $('#drawiocontainer').remove();
 
-                $('#loolcontainer').remove();
-
-                var container = '<div id="loolcontainer" style="position: fixed; bottom: 50px; width: 100%; top: 96px; left: 0; background: white;"></div>';
+                var container = '<div id="drawiocontainer"></div>';
+                //var container = '<div id="drawiocontainer" style="position: fixed; bottom: 50px; width: 100%; top: 96px; left: 0; background: white;"></div>';
                 //var img = '<img onclick="DiagramEditor.editElement(this);" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHdpZHRoPSIxMjFweCIgaGVpZ2h0PSI2MXB4IiB2aWV3Qm94PSItMC41IC0wLjUgMTIxIDYxIiBjb250ZW50PSImbHQ7bXhmaWxlIGV0YWc9JnF1b3Q7VGdBR2JKbGNJaGw3a1JuRGFxSDQmcXVvdDsgYWdlbnQ9JnF1b3Q7TW96aWxsYS81LjAgKE1hY2ludG9zaDsgSW50ZWwgTWFjIE9TIFggMTBfMTRfNikgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzgwLjAuMzk4Ny4xMDYgU2FmYXJpLzUzNy4zNiZxdW90OyBtb2RpZmllZD0mcXVvdDsyMDIwLTAyLTE5VDEyOjQ0OjI3LjY1OVomcXVvdDsgaG9zdD0mcXVvdDt0ZXN0LmRyYXcuaW8mcXVvdDsgdmVyc2lvbj0mcXVvdDtARFJBV0lPLVZFUlNJT05AJnF1b3Q7Jmd0OyZsdDtkaWFncmFtIGlkPSZxdW90O3JVdXh2bWFtZE5aMXpyTFhPbF82JnF1b3Q7IG5hbWU9JnF1b3Q7UGFnZS0xJnF1b3Q7Jmd0O2xaUExic0l3RUVXL0prc2t4Nll0V3dvcGZhaWxLcXFRMkpsNGNGdzVHZVFZU1ByMVRZaWRCeXphcmpJK21VZm1YaWRnczdSWUdMNVBYbEdBRGlnUlJjRG1BYVVocGF4NjFLUnN5VjFEcEZIQ3NRNnMxRGM0U0J3OUtBSDVJTkVpYXF2MlF4aGpsa0ZzQjR3Ymc2ZGgyZzcxY09xZVM3Z0NxNWpyYTdwV3dpWU5uZHlRamorQ2tvbWZIQkwzSnVVKzJZRTg0UUpQUGNTaWdNME1vbTJpdEppQnJ0WHp1cnlGNy9NeFpSK2piRU5pU2FmUlJxcFIwK3poUHlYdENnWXkrOWZXbnptWTVmYXJscFFTemJlVnIrZktsZVhHTmczOTBPeXdIZHVuWTFnc1g5YlBiSWU0THFlamJzUDJJM05iZWxVTkhqSUJkVDBKMkwzVVBNOWQzS3BVSDVvNVJ6QVdpZ3M3ZnRrbDdJMWZBS1pnVFZuVnVTN01lK0p1NWNRZFQ1M0RvVTlKZXU3ZU9zYmRwWkp0NTA2NEtuQWIrMk5QU284NjE4L3B2WitIUlQ4PSZsdDsvZGlhZ3JhbSZndDsmbHQ7L214ZmlsZSZndDsiIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7Ij48ZGVmcy8+PGc+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSI2MCIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMDAwMDAwIiBwb2ludGVyLWV2ZW50cz0iYWxsIi8+PGcgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMnB4Ij48dGV4dCB4PSI1OS41IiB5PSIzNC41Ij5TdGFydDwvdGV4dD48L2c+PC9nPjwvc3ZnPg==" style="cursor:pointer;"></img>';
                 $('#libreoffice-online').append(container);
-                var loolContainer = $('#loolcontainer');
-
-                //loolContainer.append(img);
-
-
+                var loolContainer = $('#drawiocontainer');
                 $.get('/share/proxy/alfresco/api/node/content/workspace/SpacesStore/' + id, function(data) {
-                    alert(data.substring(0, 10));
                     //var jq = $(data).appendTo(loolContainer);
                     DiagramEditor.startEditing(data, function(data) {
                         console.log('onSave called.');
@@ -120,6 +111,8 @@ if (typeof Catalyst == "undefined" || !Catalyst) {
                                 alert("Data Uploaded: ");
                             }
                         });
+                    }, null, null, function() {
+                            window.location.href = `/share/page/document-details?nodeRef=${me.options.nodeRef}`;
                     });
                 });
 
@@ -149,6 +142,7 @@ function DiagramEditor(config, ui, done) {
     var self = this;
 
     this.handleMessageEvent = function(evt) {
+        console.log('received event:', evt);
         if (self.frame != null && evt.source == self.frame.contentWindow &&
             evt.data.length > 0) {
             try {
@@ -270,7 +264,7 @@ DiagramEditor.prototype.startEditing = function(data, format, title) {
             this.getFrameUrl(),
             this.getFrameStyle());
         //document.body.appendChild(this.frame);
-        document.getElementById('loolcontainer').appendChild(this.frame);
+        document.getElementById('drawiocontainer').appendChild(this.frame);
         this.setWaiting(true);
     }
 };
@@ -321,9 +315,10 @@ DiagramEditor.prototype.setActive = function(active) {
 DiagramEditor.prototype.stopEditing = function() {
     if (this.frame != null) {
         window.removeEventListener('message', this.handleMessageEvent);
-        document.body.removeChild(this.frame);
+        document.getElementById('drawiocontainer').removeChild(this.frame);
         this.setActive(false);
         this.frame = null;
+        this.done();
     }
 };
 
@@ -331,6 +326,7 @@ DiagramEditor.prototype.stopEditing = function() {
  * Send the given message to the iframe.
  */
 DiagramEditor.prototype.postMessage = function(msg) {
+    console.log('postMessage: ', msg);
     if (this.frame != null) {
         this.frame.contentWindow.postMessage(JSON.stringify(msg), '*');
     }
@@ -365,9 +361,11 @@ DiagramEditor.prototype.getFrameStyle = function() {
 DiagramEditor.prototype.getFrameUrl = function() {
     var url = this.drawDomain + '?embed=1&proto=json&spin=1';
 
+    /*
     if (this.ui != null) {
         url += '&ui=' + this.ui;
     }
+    */
 
     if (this.libraries != null) {
         url += '&libraries=1';
@@ -417,15 +415,18 @@ DiagramEditor.prototype.handleMessage = function(msg) {
         this.stopEditing();
     }
     else if (msg.event == 'save') {
+        if (msg.xml) {
+            this.save(msg.xml, false, this.startElement);
+            this.setStatus('allChangesSaved', true);
+        }
         if (msg.exit) {
             msg.event = 'exit';
-        }
-        else {
-            this.setStatus('allChangesSaved', false);
         }
     }
 
     if (msg.event == 'exit') {
+        this.stopEditing(msg);
+        /*
         if (this.format != 'xml' && !msg.modified) {
             this.postMessage({
                 action: 'export', format: this.format,
@@ -436,6 +437,7 @@ DiagramEditor.prototype.handleMessage = function(msg) {
             this.save(msg.xml, false, this.startElement);
             this.stopEditing(msg);
         }
+        */
     }
 };
 
@@ -450,11 +452,20 @@ DiagramEditor.prototype.configureEditor = function() {
  * Posts load message to editor.
  */
 DiagramEditor.prototype.initializeEditor = function() {
-    this.postMessage({
-        action: 'load', autosave: 1, saveAndExit: '1',
-        modified: 'unsavedChanges', xml: this.getData(),
-        title: this.getTitle()
-    });
+
+    if (this.data.length == 0) {
+        this.postMessage({
+            action: 'template',
+            autosave: 1, saveAndExit: '1',
+            modified: 'unsavedChanges'
+        });
+    } else {
+        this.postMessage({
+            action: 'load', autosave: 1, saveAndExit: '1',
+            modified: 'unsavedChanges', xml: this.getData(),
+            title: this.getTitle()
+        });
+    }
     this.setWaiting(false);
     this.setActive(true);
 };
@@ -463,15 +474,17 @@ DiagramEditor.prototype.initializeEditor = function() {
  * Saves the given data.
  */
 DiagramEditor.prototype.save = function(data, draft, elt) {
-    console.log('save called');
+    console.log('save called', data);
     if (this.onSave) {
         this.onSave(data);
         return;
     }
+    /*
     if (elt != null && !draft) {
         this.setElementData(elt, data);
         this.done(data, draft, elt);
     }
+    */
 };
 
 /**
