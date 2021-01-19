@@ -59,8 +59,9 @@ if (typeof Catalyst == "undefined" || !Catalyst) {
                 var container = '<div id="drawiocontainer"></div>';
                 $('#libreoffice-online').append(container);
                 me.getData('/share/proxy/alfresco/api/node/content/workspace/SpacesStore/' + id, fmt, function(src) {
-                    DiagramEditor.startEditing('drawiocontainer', src, fmt, title, function(data) {
+                    DiagramEditor.startEditing('drawiocontainer', src, fmt, title, function(data, afterSaved) {
                         console.log('onSave called.');
+                        console.log(typeof (data));
                         var fileObj = new File([data], title, {
                             type: 'application/octet-stream'
                         });
@@ -112,6 +113,9 @@ if (typeof Catalyst == "undefined" || !Catalyst) {
                             processData: false,
                             success: function() {
                                 alert("Data Uploaded: ");
+                                if (afterSaved) {
+                                    afterSaved();
+                                }
                             }
                         });
                     }, null, null, function() {
@@ -437,6 +441,8 @@ DiagramEditor.prototype.setStatus = function(messageKey, modified) {
  * Handles the given message.
  */
 DiagramEditor.prototype.handleMessage = function(msg) {
+    console.log('Handle message:', msg);
+    var self = this;
     if (msg.event == 'configure') {
         this.configureEditor();
     }
@@ -447,9 +453,12 @@ DiagramEditor.prototype.handleMessage = function(msg) {
         //this.save(msg.xml, true, this.startElement);
     }
     else if (msg.event == 'export') {
-        this.save(msg.data, false);
-        this.setStatus('allChangesSaved', true);
-        this.stopEditing();
+        fetch(msg.data)
+            .then(res => res.blob())
+            .then(blob => {
+                console.log('Save blob...');
+                this.save(blob, false, msg.message.exit);
+            });
     }
     else if (msg.event == 'save') {
         if (msg.xml) {
@@ -458,15 +467,13 @@ DiagramEditor.prototype.handleMessage = function(msg) {
                     action: 'export',
                     format: 'xmlpng',
                     xml: msg.xml,
-                    spinKey: 'export'
+                    spinKey: 'export',
+                    exit: !!msg.exit,
                 });
+                return;
             } else {
-                this.save(msg.xml, false);
-                this.setStatus('allChangesSaved', true);
+                this.save(msg.xml, false, msg.exit);
             }
-        }
-        if (msg.exit) {
-            msg.event = 'exit';
         }
     }
 
@@ -490,12 +497,12 @@ DiagramEditor.prototype.initializeEditor = function() {
     if (this.data.length == 0) {
         this.postMessage({
             action: 'template',
-            autosave: 1, saveAndExit: '1',
+            autosave: '0', saveAndExit: '1',
             modified: 'unsavedChanges'
         });
     } else {
         this.postMessage({
-            action: 'load', autosave: 1, saveAndExit: '1',
+            action: 'load', autosave: '0', saveAndExit: '1',
             modified: 'unsavedChanges', xml: this.getData(),
             title: this.getTitle()
         });
@@ -507,11 +514,18 @@ DiagramEditor.prototype.initializeEditor = function() {
 /**
  * Saves the given data.
  */
-DiagramEditor.prototype.save = function(data, draft) {
+DiagramEditor.prototype.save = function(data, draft, exit) {
     console.log('save called', data);
+    var self = this;
     if (this.onSave) {
-        this.onSave(data);
-        return;
+        self.spinner('Saving...');
+        this.onSave(data, function() {
+            self.spinner(null);
+            self.setStatus('allChangesSaved', true);
+            if (exit) {
+                self.stopEditing();
+            }
+        });
     }
 };
 
@@ -521,3 +535,17 @@ DiagramEditor.prototype.save = function(data, draft) {
 DiagramEditor.prototype.done = function() {
     // hook for subclassers
 };
+
+DiagramEditor.prototype.spinner = function(msg) {
+    if (!msg) {
+        this.postMessage({
+            action: 'spinner',
+            show: false,
+        });
+    } else {
+        this.postMessage({
+            action: 'spinner',
+            message: msg,
+        });
+    }
+}
