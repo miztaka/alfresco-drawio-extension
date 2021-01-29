@@ -9,7 +9,6 @@
                 <customization>
                     <targetPackageRoot>org.alfresco</targetPackageRoot>
                     <sourcePackageRoot>net.catalyst</sourcePackageRoot>
-                    <!--<sourcePackageRoot>dk.magenta.libreOffice.online</sourcePackageRoot>-->
                 </customization>
             </customizations>
 
@@ -17,7 +16,6 @@
                 <config evaluator="string-compare" condition="DocLibActions">
                     <actions>
                         <!-- Edit online in Draw.io -->
-                        <!-- TODO: i18n of label -->
                         <action id="document-edit-drawio" type="link" label="actions.document.edit-drawio">
                             <param name="href">drawio-edit?nodeRef={node.nodeRef}</param>
                             <param name="target">_self</param>
@@ -30,7 +28,8 @@
                             <!--for where the evaluator is defined-->
                             <!-- <evaluator>evaluator.dk.magenta.doclib.action.isMimetypeEditableLibreOffice</evaluator> -->
                             <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
-                            <!-- <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator> -->
+                            <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
+                            <evaluator>evaluator.catalyst.drawio.fileExtension</evaluator>
                         </action>
                     </actions>
                     <actionGroups>
@@ -50,11 +49,6 @@
             <version>1.0</version>
             <auto-deploy>true</auto-deploy>
             <auto-deploy-index>7</auto-deploy-index>
-            <evaluator type="magenta.page.module.evaluator">
-                <params>
-                    <pageId>drawio-edit</pageId>
-                </params>
-            </evaluator>
             <configurations>
                 <config evaluator="string-compare" condition="WebFramework" replace="false">
                     <web-framework>

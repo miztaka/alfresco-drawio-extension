@@ -112,7 +112,6 @@ if (typeof Catalyst == "undefined" || !Catalyst) {
                             contentType: false,
                             processData: false,
                             success: function() {
-                                alert("Data Uploaded: ");
                                 if (afterSaved) {
                                     afterSaved();
                                 }
@@ -494,7 +493,9 @@ DiagramEditor.prototype.configureEditor = function() {
  */
 DiagramEditor.prototype.initializeEditor = function() {
 
-    if (this.data.length == 0) {
+    console.log(this.data);
+
+    if (this.isDataEmpty()) {
         this.postMessage({
             action: 'template',
             autosave: '0', saveAndExit: '1',
@@ -548,4 +549,15 @@ DiagramEditor.prototype.spinner = function(msg) {
             message: msg,
         });
     }
+}
+
+DiagramEditor.prototype.isDataEmpty = function() {
+    if (this.format === 'xmlpng') {
+        var chunk = this.data.split(',');
+        if (chunk.length < 2 || chunk[1].length === 0) {
+            return true;
+        }
+        return false;
+    }
+    return this.data.length === 0;
 }
