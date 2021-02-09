@@ -1,10 +1,10 @@
 <extension>
     <modules>
         <module>
-            <id>Global Extensions</id>
+            <id>Drawio-Edit-Menu</id>
             <version>1.0</version>
             <auto-deploy>true</auto-deploy>
-            <auto-deploy-index>1</auto-deploy-index>
+            <auto-deploy-index>2</auto-deploy-index>
             <customizations>
                 <customization>
                     <targetPackageRoot>org.alfresco</targetPackageRoot>
