@@ -45,13 +45,14 @@ if (typeof Catalyst == "undefined" || !Catalyst) {
             var id = Alfresco.util.NodeRef(me.options.nodeRef).id;
             var title = me.options.metadata.name.prefixedName.substring(3);
             var fmt = title.match(/\.drawio\.png$/) ? 'xmlpng' : 'xml';
+            var baseUrl = Alfresco.util.message("drawio.baseUrl");
 
             require(["jquery"], (function ($) {
                 $('#drawiocontainer').remove();
                 var container = '<div id="drawiocontainer"></div>';
                 $('#drawio-editor').append(container);
                 me.getData('/share/proxy/alfresco/api/node/content/workspace/SpacesStore/' + id, fmt, function(src) {
-                    DiagramEditor.startEditing('drawiocontainer', src, fmt, title, function(data, afterSaved) {
+                    DiagramEditor.startEditing('drawiocontainer', baseUrl, src, fmt, title, function(data, afterSaved) {
                         var fileObj = new File([data], title, {
                             type: 'application/octet-stream'
                         });
@@ -144,8 +145,9 @@ function DiagramEditor(id, config, ui, done) {
     };
 };
 
-DiagramEditor.startEditing = function(id, data, type, title, callback, config, ui, done) {
+DiagramEditor.startEditing = function(id, baseUrl, data, type, title, callback, config, ui, done) {
     DiagramEditor.prototype.onSave = callback;
+    DiagramEditor.prototype.drawDomain = baseUrl;
     return new DiagramEditor(id, config, ui, done).startEditing(data, type, title);
 }
 
@@ -157,7 +159,7 @@ DiagramEditor.prototype.config = null;
 /**
  * Protocol and domain to use.
  */
-DiagramEditor.prototype.drawDomain = 'https://embed.diagrams.net/';
+DiagramEditor.prototype.drawDomain = 'https://embed.diagrams.net/?embed=1&proto=json&spin=1';
 
 /**
  * UI theme to be use.
@@ -264,7 +266,54 @@ DiagramEditor.prototype.getFrameStyle = function() {
  * Returns the URL for the iframe.
  */
 DiagramEditor.prototype.getFrameUrl = function() {
-    var url = this.drawDomain + '?embed=1&proto=json&spin=1';
+    var libs = [
+        //'allied_telesis',
+        'android',
+        //'archimate',
+        //'archimate3',
+        'arrows2',
+        //'atlassian',
+        'aws3',
+        'aws3d',
+        'aws4',
+        'azure',
+        'basic',
+        'bootstrap',
+        'bpmn',
+        'cabinets',
+        //'cisco',
+        //'cisco_safe',
+        //'citrix',
+        'clipart',
+        'dfd',
+        'eip',
+        'electrical',
+        'er',
+        'floorplan',
+        'flowchart',
+        //'gcp2',
+        'general',
+        'gmdl',
+        //'ibm',
+        'images',
+        'infographic',
+        'ios',
+        'lean_mapping',
+        'mockups',
+        'mscae',
+        'network',
+        'office',
+        'pid',
+        'rack',
+        'signs',
+        'sitemap',
+        'sysml',
+        'uml',
+        //'veeam',
+        'webicons'
+    ];
+
+    var url = this.drawDomain + '&libs=' + libs.join(';');
 
     /*
     if (this.ui != null) {
@@ -363,13 +412,17 @@ DiagramEditor.prototype.initializeEditor = function() {
     if (this.isDataEmpty()) {
         this.postMessage({
             action: 'template',
-            autosave: '0', saveAndExit: '1',
+            autosave: '0',
+            saveAndExit: '1',
             modified: 'unsavedChanges'
         });
     } else {
         this.postMessage({
-            action: 'load', autosave: '0', saveAndExit: '1',
-            modified: 'unsavedChanges', xml: this.getData(),
+            action: 'load',
+            autosave: '0',
+            saveAndExit: '1',
+            modified: 'unsavedChanges',
+            xml: this.getData(),
             title: this.getTitle()
         });
     }
@@ -431,7 +484,7 @@ DiagramEditor.prototype.log = function(msg, obj) {
     var enableLog = false;
     if (enableLog) {
         if (obj) {
-            console.log(msg, obj);   
+            console.log(msg, obj);
         } else {
             console.log(msg);
         }
