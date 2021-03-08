@@ -123,46 +123,7 @@
                         <artifactId>alfresco-maven-plugin</artifactId>
                         <version>${alfresco.sdk.version}</version>
                     </dependency>
-
                 </dependencies>
-            </plugin>
-
-            <!-- Hot reloading with JRebel -->
-            <plugin>
-                <groupId>org.zeroturnaround</groupId>
-                <artifactId>jrebel-maven-plugin</artifactId>
-                <version>${jrebel.version}</version>
-                <executions>
-                    <execution>
-                        <id>generate-rebel-xml</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <!-- For more information about how to configure JRebel plugin see:
-                         http://manuals.zeroturnaround.com/jrebel/standalone/maven.html#maven-rebel-xml -->
-                    <classpath>
-                        <fallback>all</fallback>
-                        <resources>
-                            <resource>
-                                <!--
-                                Empty resource element marks default configuration. By
-                                default it is placed first in generated configuration.
-                                -->
-                            </resource>
-                        </resources>
-                    </classpath>
-
-                    <!--
-                      alwaysGenerate - default is false
-                      If 'false' - rebel.xml is generated if timestamps of pom.xml and the current rebel.xml file are not equal.
-                      If 'true' - rebel.xml will always be generated
-                    -->
-                    <alwaysGenerate>true</alwaysGenerate>
-                </configuration>
             </plugin>
 
             <plugin>

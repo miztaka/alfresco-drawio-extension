@@ -45,7 +45,7 @@ if (typeof Catalyst == "undefined" || !Catalyst) {
             var id = Alfresco.util.NodeRef(me.options.nodeRef).id;
             var title = me.options.metadata.name.prefixedName.substring(3);
             var fmt = title.match(/\.drawio\.png$/) ? 'xmlpng' : 'xml';
-            var baseUrl = Alfresco.util.message("drawio.baseUrl");
+            var baseUrl = me.options.baseUrl;
 
             require(["jquery"], (function ($) {
                 $('#drawiocontainer').remove();

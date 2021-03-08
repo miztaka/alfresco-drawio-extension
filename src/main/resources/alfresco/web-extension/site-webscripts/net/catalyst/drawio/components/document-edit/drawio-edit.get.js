@@ -26,6 +26,7 @@
             options: {
                 nodeRef: nodeRef,
                 metadata: metadata,
+                baseUrl: config.scoped['Drawio']['baseUrl'].getValue()
             }
         };
         model.widgets = [drawioWidget];

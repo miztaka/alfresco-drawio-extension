@@ -1,0 +1,5 @@
+<alfresco-config>
+  <config evaluator="string-compare" condition="Drawio" replace="true">
+    <baseUrl>http://localhost:8080/?offline=1&amp;https=0&amp;embed=1&amp;proto=json&amp;spin=1</baseUrl>
+  </config>
+</alfresco-config>
