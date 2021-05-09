@@ -5,7 +5,7 @@
             connector = remote.connect("alfresco");
         // Get metadata of node to determine file format
         try {
-            var result = connector.get('/slingshot/node/' + nodeRef.replace('://', '/'));
+            var result = connector.get('/api/node/' + nodeRef.replace('://', '/') + '/metadata');
             if (result.status.code == status.STATUS_OK) {
                 metadata = JSON.parse(result.response);
             } else {

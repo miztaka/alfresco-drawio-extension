@@ -43,7 +43,7 @@ if (typeof Catalyst == "undefined" || !Catalyst) {
 
             var me = this;
             var id = Alfresco.util.NodeRef(me.options.nodeRef).id;
-            var title = me.options.metadata.name.prefixedName.substring(3);
+            var title = me.options.metadata.name;
             var fmt = title.match(/\.drawio\.png$/) ? 'xmlpng' : 'xml';
             var baseUrl = me.options.baseUrl;
 
@@ -414,7 +414,8 @@ DiagramEditor.prototype.initializeEditor = function() {
             action: 'template',
             autosave: '0',
             saveAndExit: '1',
-            modified: 'unsavedChanges'
+            modified: 'unsavedChanges',
+            title: this.getTitle()
         });
     } else {
         this.postMessage({
