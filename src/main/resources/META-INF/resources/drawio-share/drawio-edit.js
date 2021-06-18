@@ -187,6 +187,11 @@ DiagramEditor.prototype.frameStyle = 'position:absolute;border:0;width:100%;heig
 DiagramEditor.prototype.onSave = null;
 
 /**
+ * Message sent by autosave: pool until certain timing.
+ */
+DiagramEditor.prototype.unsavedMessage = null;
+
+/**
  * Starts the editor for the given data.
  */
 DiagramEditor.prototype.startEditing = function(data, format, title) {
@@ -363,14 +368,14 @@ DiagramEditor.prototype.handleMessage = function(msg) {
         this.initializeEditor();
     }
     else if (msg.event == 'autosave') {
-        // TODO
-        //this.save(msg.xml, true, this.startElement);
+        this.unsavedMessage = msg;
     }
     else if (msg.event == 'export') {
+        var draft = msg.message.draft === 'true';
         fetch(msg.data)
             .then(res => res.blob())
             .then(blob => {
-                this.save(blob, false, msg.message.exit);
+                this.save(blob, draft, msg.message.exit);
             });
     }
     else if (msg.event == 'save') {
@@ -412,7 +417,7 @@ DiagramEditor.prototype.initializeEditor = function() {
     if (this.isDataEmpty()) {
         this.postMessage({
             action: 'template',
-            autosave: '0',
+            autosave: '1',
             saveAndExit: '1',
             modified: 'unsavedChanges',
             title: this.getTitle()
@@ -420,7 +425,7 @@ DiagramEditor.prototype.initializeEditor = function() {
     } else {
         this.postMessage({
             action: 'load',
-            autosave: '0',
+            autosave: '1',
             saveAndExit: '1',
             modified: 'unsavedChanges',
             xml: this.getData(),
@@ -429,6 +434,10 @@ DiagramEditor.prototype.initializeEditor = function() {
     }
     //this.setWaiting(false);
     this.setActive(true);
+    self = this;
+    setInterval(function() {
+        self.autosaveHandler();
+    }, 120000);
 };
 
 /**
@@ -438,9 +447,14 @@ DiagramEditor.prototype.save = function(data, draft, exit) {
     this.log('save called', data);
     var self = this;
     if (this.onSave) {
-        self.spinner('Saving...');
+        if (!draft) {
+            self.spinner('Saving...');
+        }
         this.onSave(data, function() {
-            self.spinner(null);
+            self.unsavedMessage = null;
+            if (!draft) {
+                self.spinner(null);
+            }
             self.setStatus('allChangesSaved', true);
             if (exit) {
                 self.stopEditing();
@@ -448,6 +462,32 @@ DiagramEditor.prototype.save = function(data, draft, exit) {
         });
     }
 };
+
+/**
+ * Handle autosave
+ */
+DiagramEditor.prototype.autosaveHandler = function() {
+    this.log("autosave handler");
+    var msg = this.unsavedMessage;
+    if (msg == null) {
+        return;
+    }
+    this.log("Do auto save**************");
+    if (msg.xml) {
+        if (this.format === 'xmlpng') {
+            this.postMessage({
+                action: 'export',
+                format: 'xmlpng',
+                draft: 'true',
+                xml: msg.xml,
+                exit: false,
+            });
+            return;
+        } else {
+            this.save(msg.xml, true, false);
+        }
+    }
+}
 
 /**
  * Invoked after save.
@@ -482,7 +522,7 @@ DiagramEditor.prototype.isDataEmpty = function() {
 }
 
 DiagramEditor.prototype.log = function(msg, obj) {
-    var enableLog = false;
+    var enableLog = true;
     if (enableLog) {
         if (obj) {
             console.log(msg, obj);
