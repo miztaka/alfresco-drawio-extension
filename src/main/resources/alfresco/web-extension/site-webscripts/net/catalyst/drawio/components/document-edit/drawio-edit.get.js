@@ -26,7 +26,8 @@
             options: {
                 nodeRef: nodeRef,
                 metadata: metadata,
-                baseUrl: config.scoped['Drawio']['baseUrl'].getValue()
+                baseUrl: config.scoped['Drawio']['baseUrl'].getValue(),
+                autosaveIntervalMs: config.scoped['Drawio']['autosaveIntervalMs'].getValue()
             }
         };
         model.widgets = [drawioWidget];

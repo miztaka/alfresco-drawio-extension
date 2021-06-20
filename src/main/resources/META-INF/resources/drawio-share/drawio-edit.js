@@ -46,6 +46,10 @@ if (typeof Catalyst == "undefined" || !Catalyst) {
             var title = me.options.metadata.name;
             var fmt = title.match(/\.drawio\.png$/) ? 'xmlpng' : 'xml';
             var baseUrl = me.options.baseUrl;
+            var autosaveIntervalMs = parseInt(me.options.autosaveIntervalMs, 10);
+            if (autosaveIntervalMs) {
+                DiagramEditor.prototype.autosaveIntervalMs = autosaveIntervalMs;
+            }
 
             require(["jquery"], (function ($) {
                 $('#drawiocontainer').remove();
@@ -190,6 +194,11 @@ DiagramEditor.prototype.onSave = null;
  * Message sent by autosave: pool until certain timing.
  */
 DiagramEditor.prototype.unsavedMessage = null;
+
+/**
+ * Interval for autosave
+ */
+DiagramEditor.prototype.autosaveIntervalMs = 120000;
 
 /**
  * Starts the editor for the given data.
@@ -437,7 +446,7 @@ DiagramEditor.prototype.initializeEditor = function() {
     self = this;
     setInterval(function() {
         self.autosaveHandler();
-    }, 120000);
+    }, self.autosaveIntervalMs);
 };
 
 /**
@@ -522,7 +531,7 @@ DiagramEditor.prototype.isDataEmpty = function() {
 }
 
 DiagramEditor.prototype.log = function(msg, obj) {
-    var enableLog = true;
+    var enableLog = false;
     if (enableLog) {
         if (obj) {
             console.log(msg, obj);
